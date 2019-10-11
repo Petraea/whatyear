@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse, datetime, calendar
 parser = argparse.ArgumentParser()
+parser.add_argument('-f','--future',action='store_true',help='Return future years instead of past ones.')
 parser.add_argument("day_of_week")
 parser.add_argument("day_of_month")
 parser.add_argument("month")
@@ -8,7 +9,7 @@ args = parser.parse_args()
 
 MAX_RESULTS = 10
 
-REFERENCE_YEAR=1600 # Must be in the past _and_ a leap year
+REFERENCE_YEAR=1600 # Must be a leap year
 
 weekdays=list(calendar.day_name)
 months=list(calendar.month_name)
@@ -61,7 +62,11 @@ dom = day_of_month
 
 matchingyears=[]
 thisyear = datetime.date.today().year
-for year in range(thisyear,REFERENCE_YEAR,-1):
+if args.future:
+    year_range = range(thisyear,thisyear+2000)
+else:
+    year_range = range(thisyear,0,-1)
+for year in year_range:
     try:
         testdate = datetime.date(year,m,dom)
     except ValueError: #Only on 29th Feb
